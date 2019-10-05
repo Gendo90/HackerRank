@@ -48,3 +48,23 @@ def countInversions(arr):
 arr = [2, 1, 3, 1, 2]
 
 print(countInversions(arr))
+
+if __name__ == '__main__':
+    sys.setrecursionlimit(2000)
+    n = 15
+
+    d = 100000
+
+    # arr = np.genfromtxt(r'inversions.txt', delimiter='/n')
+    with open('inversions.txt') as f:
+        content = f.readlines()
+    # you may also want to remove whitespace characters like `\n` at the end of each line
+    # content = [x.strip() for x in content]
+
+    arr = list(map(int, content[2].split(" ")))
+
+    # print(arr)
+
+    result, output_arr = countInversions(arr)
+
+    print(result)
