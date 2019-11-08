@@ -111,17 +111,24 @@ def minTime(roads, machines):
         time_total+=removal[1]
 
     #gives remaining items to be disconnected
-    print(graph_map)
-    print(machine_map)
-    for item in machine_map.keys():
+    # print(graph_map)
+    # print(machine_map)
+    check_cities = list(machine_map.keys())
+    while(check_cities):
+        item = check_cities.pop(0)
         if(bfs(item, graph_map, machine_map)):
             path, times, curr = dijkstra_mapping(item, graph_map, machine_map)
             # print(times)
             # print(graph_map)
             starter = times.pop(0)
+            #add the cities to check again after this connection is broken
+            check_cities.append(curr)
+            check_cities.append(item)
+            print(check_cities)
             #need to sever the connection here at the minimum edge
             times.sort(key=sorter_func)
             if(not times):
+                check_cities.pop()
                 continue
             removal = times[0]
             # print(removal)
