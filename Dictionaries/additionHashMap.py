@@ -40,6 +40,13 @@ class additionHashMap():
     def add_to_vals(self, val_plus):
         self.v_mod += val_plus
 
+    #gives all current keys for the additionHashMap
+    def keys(self):
+        return [key+self.k_mod for key in self.map.keys()]
+
+    def values(self):
+        return [val+self.v_mod for val in self.map.values()]
+
 
 if __name__ == '__main__':
     map_check = additionHashMap(0, 0)
@@ -82,11 +89,10 @@ if __name__ == '__main__':
     #map => {3:-7, 5:1, 6:10, 0:3}
     map_check.add_to_vals(7)
     #map => {3:0, 5:8, 6:17, 0:10}
-    print(map_check.get_val(0))
-    print(map_check.get_val(3))
-    print(map_check.get_val(5))
-    print(map_check.map, map_check.k_mod)
-    print(map_check.get_val(6))
+    print(map_check.keys())
+    for item in map_check.keys():
+        print(map_check.get_val(item))
+    print(map_check.values())
     map_check.set_val(2, 25)
     map_check.set_val(4, 25)
-    print(map_check.map, map_check.k_mod)
+    print(map_check.values())
