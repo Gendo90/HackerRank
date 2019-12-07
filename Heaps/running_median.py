@@ -10,7 +10,9 @@ def runningMedian(arr):
     upper_heap = [arr[0]]
     lower_heap_len = 0
     upper_heap_len = 1
-    print("{:.1f}".format(arr[0]*1.0))
+    medians = []
+    medians.append("{:.1f}".format(arr[0]*1.0))
+    # print("{:.1f}".format(arr[0]*1.0))
 
     for i, item in enumerate(arr[1:][:]):
         # print(i, item, lower_heap, upper_heap)
@@ -32,14 +34,18 @@ def runningMedian(arr):
                 upper_heap_len+=1
                 lower_heap_len-=1
             avg = (upper_heap[0]-lower_heap[0])/2
-            print("{:.1f}".format(avg*1.0))
+            medians.append("{:.1f}".format(avg*1.0))
+            # print("{:.1f}".format(avg*1.0))
         else:
             if(upper_heap_len>lower_heap_len):
                 med = upper_heap[0]
             else:
                 med = -lower_heap[0]
-            print("{:.1f}".format(med*1.0))
+            medians.append("{:.1f}".format(med*1.0))
+            # print("{:.1f}".format(med*1.0))
+
+    return medians
 
 arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 
-runningMedian(arr)
+list(map(lambda x: print(x), runningMedian(arr)))
