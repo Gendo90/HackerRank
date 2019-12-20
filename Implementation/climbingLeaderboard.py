@@ -6,6 +6,7 @@ import random
 import re
 import sys
 
+#modified to return index that search ends on if not found
 def binary_search(input_array, value):
     test_array = input_array
     current_index = len(input_array)//2
@@ -32,6 +33,32 @@ def binary_search(input_array, value):
 
     return input_index
 
+#modified to return index that search ends on if not found
+def binary_search_recursive(a, x, left, right):
+
+    index = (left+right)//2
+    if a[index]==x:
+        return index
+    elif left==right: # case where search is complete and no value x not found
+        return right
+    elif left==right-1: # case where there are only two numbers left, check both!
+        if(a[left]==x):
+            return left
+        elif(a[right]==x):
+            return right
+        else:
+            if(a[right]<x):
+                return right
+            else:
+                return left
+
+    elif a[index]<x:
+        left = index
+        return binary_search_recursive(a, x, left, right)
+    elif a[index]>x:
+        right = index
+        return binary_search_recursive(a, x, left, right)
+
 # Complete the climbingLeaderboard function below.
 def climbingLeaderboard(scores, alice):
     #first, make a hash map of the scores and how many players are at each
@@ -54,8 +81,9 @@ def climbingLeaderboard(scores, alice):
     #and use the map to get the rank of that score to determine Alice's rank
     output = []
     for this_score in alice:
-        score_index = binary_search(backwards, this_score)
+        score_index = binary_search_recursive(backwards, this_score, 0, len(backwards)-1)
         next_score = backwards[score_index]
+        print(score_index)
         if(next_score==this_score):
             output.append(scores_to_rank[this_score])
         elif(next_score>this_score):
