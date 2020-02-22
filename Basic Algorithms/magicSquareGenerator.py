@@ -174,8 +174,11 @@ def getToNumber(desiredNum, values, n):
 #exponential function? - use caution!
 #upgrade with memoization at some point!
 #maybe include a filter, to limit the depth of the recursion (e.g. only need 3 factors, or 4)
-def recursiveSums(desiredNum, values):
-    # print(values)
+def recursiveSums(desiredNum, values, depth=0, max_depth=5):
+    # print(seen)
+    depth+=1
+    if(depth>max_depth):
+        return
     if(len(values)==1):
         if(values[0]==desiredNum):
             return values[0]
@@ -186,15 +189,28 @@ def recursiveSums(desiredNum, values):
             thisDesiredNum = desiredNum-value
             if(thisDesiredNum==0):
                 arr.append(value)
-                removals.append(value)
+                # removals.append(value)
             elif(thisDesiredNum>0):
-                newValues = values[:]
-                newValues.pop(i)
+                #quick fix prevents double counting here
+                newValues = [l for l in values if(l not in removals)]
+                newValues.pop(newValues.index(value))
                 arr.append([value])
                 # print(thisDesiredNum)
-                arr[-1].extend(recursiveSums(thisDesiredNum, newValues))
-                if(len(arr[-1])==0 or arr[-1]==[value]):
-                    arr.pop()
+                if(len(newValues)!=0 and sum(newValues)>=thisDesiredNum):
+                    # print(newValues)
+                    # if((tuple(newValues) not in seen)):
+                    newSums = recursiveSums(thisDesiredNum, newValues, depth, max_depth)
+                        # seen[tuple(newValues)] = newSums
+                    # else:
+                    #     newSums = seen[tuple(newValues)]
+                    if(newSums):
+                        if(isinstance(newSums, int)):
+                            arr.append([newSums])
+                        else:
+                            arr[-1].extend(newSums)
+                        # print(newSums, arr[-1])
+                        if(len(arr[-1])==0 or arr[-1]==[value]):
+                            arr.pop()
             removals.append(value)
         #remove unusable values
         # print("arr is ", arr, removals)
@@ -202,7 +218,56 @@ def recursiveSums(desiredNum, values):
         iteratedValues = [value for value in values if(value not in removals)]
         if(iteratedValues):
             # print("values left are ", iteratedValues)
-            arr.append(recursiveSums(desiredNum, iteratedValues))
+            arr.append(recursiveSums(desiredNum, iteratedValues, depth, max_depth))
+        return arr
+
+#attempt at memoization
+def recursiveSums2(desiredNum, values, depth=0, max_depth=5, seen={}):
+    # print(seen)
+    depth+=1
+    if(depth>max_depth):
+        return
+    if(len(values)==1):
+        if(values[0]==desiredNum):
+            return values[0]
+    else:
+        arr = []
+        removals = []
+        for i, value in enumerate(values):
+            thisDesiredNum = desiredNum-value
+            if(thisDesiredNum==0):
+                arr.append(value)
+                # removals.append(value)
+            elif(thisDesiredNum>0):
+                #quick fix prevents double counting here
+                newValues = [l for l in values if(l not in removals)]
+                newValues.pop(newValues.index(value))
+                arr.append([value])
+                # print(thisDesiredNum)
+                if(len(newValues)!=0):
+                    # print(newValues)
+                    if((tuple(newValues) not in seen)):
+                        newSums = recursiveSums2(thisDesiredNum, newValues, depth, max_depth, seen)
+                        seen[tuple(newValues)] = newSums
+                    else:
+                        newSums = seen[tuple(newValues)]
+                        # print(newSums, newValues)
+                    if(newSums):
+                        if(isinstance(newSums, int)):
+                            arr.append([newSums])
+                        else:
+                            arr[-1].extend(newSums)
+                        # print(newSums, arr[-1])
+                        if(len(arr[-1])==0 or arr[-1]==[value]):
+                            arr.pop()
+            removals.append(value)
+        #remove unusable values
+        # print("arr is ", arr, removals)
+        # print("desired num is ", desiredNum)
+        iteratedValues = [value for value in values if(value not in removals)]
+        if(iteratedValues):
+            # print("values left are ", iteratedValues)
+            arr.append(recursiveSums2(desiredNum, iteratedValues, depth, max_depth, seen))
         return arr
 
 
@@ -245,11 +310,14 @@ def setFromValues(arr):
         allSets.pop(0)
     return allSets
 
-a = [i for i in range(1, 36)]
+a = [i for i in range(1, 50)]
 # print(calcSumCombinations(a)[10])
 
-n = recursiveSums(36, a)
-# print(n[1], "Hello")
+n = recursiveSums(175, a, depth=0, max_depth=6)
+# d = recursiveSums2(10, a, depth=0, max_depth=6)
+
+# print(n, "Hello")
+# print(d, "hello 2")
 
 print(convertSumsToMap(n, a))
 
