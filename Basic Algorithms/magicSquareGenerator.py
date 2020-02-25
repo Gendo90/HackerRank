@@ -5,6 +5,7 @@ import os
 import random
 import re
 import sys
+import time
 
 # Complete the formingMagicSquare function below.
 #note: read the links in the future! would have saved a bunch of time
@@ -310,16 +311,46 @@ def setFromValues(arr):
         allSets.pop(0)
     return allSets
 
-a = [i for i in range(1, 50)]
+#add sets for larger values contained in sets that do not map to the set
+#already due to the restrictions on the algorithm additive factor search to
+#speed up the algorithm
+def completeMap(partialMapArr):
+    a = time.clock()
+    fullMap = partialMapArr.copy()
+    count = 0
+    seen = {}
+    for key in partialMapArr.keys():
+        thisNumSets = partialMapArr[key]
+        for setItem in thisNumSets:
+            tupleVersion = tuple(list(setItem))
+            if(tupleVersion in seen):
+                break
+            else:
+                seen[tupleVersion] = True
+            for num in setItem:
+                count+=1
+                if(num==key):
+                    continue
+                if(setItem not in fullMap[num]):
+                    fullMap[num].append(setItem)
+    b = time.clock()
+
+    #returns the map with duplicated values, the number of values seen (n for
+    #O(n)), and the time elapsed to run the function
+    return fullMap, count, (b-a)
+
+
+a = [i for i in range(1, 30)]
 # print(calcSumCombinations(a)[10])
 
-n = recursiveSums(175, a, depth=0, max_depth=6)
+n = recursiveSums(100, a, depth=0, max_depth=6)
 # d = recursiveSums2(10, a, depth=0, max_depth=6)
 
 # print(n, "Hello")
 # print(d, "hello 2")
-
-print(convertSumsToMap(n, a))
+partialMap = convertSumsToMap(n, a)
+print(partialMap)
+print(completeMap(partialMap))
 
 k = 6
 target_sum = sum(range(1, k**2+1))/k
