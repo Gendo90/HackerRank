@@ -1,0 +1,30 @@
+#!/bin/python3
+
+import math
+import os
+import random
+import re
+import sys
+
+# Complete the bigSorting function below.
+def bigSorting(unsorted):
+    #first group the strings into buckets based on length
+    lenMap = {}
+    for item in unsorted:
+        currLen = len(item)
+        if(currLen in lenMap):
+            lenMap[currLen].append(item)
+        else:
+            lenMap[currLen] = [item]
+
+    #convert each bucket into numbers and sort them
+    for key in lenMap.keys():
+        lenMap[key] = list(map(str, lenMap[key]))
+        lenMap[key].sort()
+
+    output = []
+
+    for key in sorted(list(lenMap.keys())):
+        output += lenMap[key]
+
+    return output
