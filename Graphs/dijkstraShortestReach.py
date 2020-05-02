@@ -279,7 +279,13 @@ def bfsConnectivityCheck(s, graph):
 # Complete the shortestReach function below.
 def shortestReach(n, edges, s):
     graph_map = {}
+    #added here for redundancy, but need to add in the read-in phase to get
+    #duplicate edges removed before even seen here, or hackerrank will throw
+    #a fit! This works on my computer, though
+    seen = set()
     for (node1, node2, cost) in edges:
+        if((node1, node2, cost) in seen or (node2, node1, cost) in seen):
+            continue
         if(node1 in graph_map):
             graph_map[node1].append((node2, cost))
         else:
@@ -290,9 +296,13 @@ def shortestReach(n, edges, s):
         else:
             graph_map[node2] = [(node1, cost)]
 
+        seen.add((node1, node2, cost))
+
     # print(len(graph_map))
     # a = time.clock()
-    connected_graph = graph_map#bfsConnectivityCheck(s, graph_map)
+    connected_graph = bfsConnectivityCheck(s, graph_map)
+    # for key, values in connected_graph.items():
+    #     print("{}:{}".format(key, len(values)))
     # print("Connectivity calc time: ", time.clock()-a)
 
     shortestPaths = dijkstra_Shortest_Path(s, connected_graph)
@@ -328,11 +338,19 @@ if __name__ == '__main__':
         edges = []
         print("There are this many edges: ", m)
 
+        seen = set()
 
+        count_edges_used = 0
         for _ in range(curr_line+1, curr_line+m+1):
-            edges.append(list(map(int, listOfLines[_].rstrip().split())))
+            edge = tuple(map(int, listOfLines[_].rstrip().split()))
+            if(edge not in seen and (edge[1], edge[0], edge[2]) not in seen):
+                count_edges_used+=1
+                edges.append(edge)
+                seen.add(edge)
 
-        print("Time to organize data from input file: {} s", time.clock()-input_start)
+        print("There are {} non-duplicate edges".format(count_edges_used))
+
+        print("Time to organize data from input file: {} s".format(time.clock()-input_start))
         curr_line+=m+1
         s = int(listOfLines[curr_line])
         start = time.clock()
@@ -352,5 +370,10 @@ if __name__ == '__main__':
     fileHandler.close()
 
     for i in range(t):
-        if(check_arr[i]==list(map(int, listOfLines[i].rstrip().split(" ")))):
+        this_ans = check_arr[i]
+        actual_ans = list(map(int, listOfLines[i].rstrip().split(" ")))
+        print(len(this_ans), len(actual_ans))
+        if(this_ans==actual_ans):
             print("TRUE")
+        else:
+            print("FALSE")
