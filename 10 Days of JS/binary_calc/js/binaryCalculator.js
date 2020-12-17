@@ -12,24 +12,7 @@ operations = {
 }
 
 function toBinary(x) {
-    let output = ''
-    //first find max power of 2 that is larger than the number
-    let max_pow = 0
-    //always overshoots by one
-    while(Math.pow(2, max_pow) <= x) {
-        max_pow += 1
-    }
-    max_pow -= 1
-    for (let i = max_pow; i >= 0; i--) {
-        if(x - Math.pow(2, i) >= 0) {
-            output += '1'
-            x -= Math.pow(2, i)
-        }
-        else {
-            output += '0'
-        }
-    }
-    return output
+    return x.toString(2)
 }
 
 //get result display element
