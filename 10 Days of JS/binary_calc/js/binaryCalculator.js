@@ -53,11 +53,45 @@ clearButton.addEventListener("click", (e) => {
 
 
 //add operator event listeners
+//sum button
 addButton = document.getElementById("btnSum")
 addButton.addEventListener("click", (e) => {
     if(model.currVal) {
         model.operation = '+'
         resEl.textContent += '+'
+        model.lastVal = model.currVal
+        model.currVal = ''
+    }
+})
+
+//subtract button
+addButton = document.getElementById("btnSub")
+addButton.addEventListener("click", (e) => {
+    if(model.currVal) {
+        model.operation = '-'
+        resEl.textContent += '-'
+        model.lastVal = model.currVal
+        model.currVal = ''
+    }
+})
+
+//multiply button
+addButton = document.getElementById("btnMul")
+addButton.addEventListener("click", (e) => {
+    if(model.currVal) {
+        model.operation = '*'
+        resEl.textContent += '*'
+        model.lastVal = model.currVal
+        model.currVal = ''
+    }
+})
+
+//multiply button
+addButton = document.getElementById("btnDiv")
+addButton.addEventListener("click", (e) => {
+    if(model.currVal) {
+        model.operation = '/'
+        resEl.textContent += '/'
         model.lastVal = model.currVal
         model.currVal = ''
     }
@@ -73,7 +107,8 @@ equalsButton.addEventListener("click", (e) => {
         console.log(result)
         result = toBinary(result)
         console.log(result)
-        model.lastVal = result
+        model.lastVal = ''
+        model.currVal = result
         resEl.textContent = result
     }
 })
